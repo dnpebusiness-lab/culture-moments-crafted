@@ -9,24 +9,20 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+import { RevealOnScroll } from "@/components/RevealOnScroll";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center bg-charcoal text-paper px-6">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
-        </div>
+        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-gold mb-6">404 — Off the programme</p>
+        <h1 className="font-serif text-6xl md:text-7xl">Page not found.</h1>
+        <p className="mt-6 text-paper/60">The page you're looking for has moved or never existed.</p>
+        <Link to="/" className="inline-block mt-10 border border-paper/30 px-8 py-4 text-[11px] uppercase tracking-[0.22em] hover:border-gold hover:text-gold transition-colors">
+          Return home
+        </Link>
       </div>
     </div>
   );
@@ -35,33 +31,17 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center bg-charcoal text-paper px-6">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Try again
-          </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-          >
-            Go home
-          </a>
-        </div>
+        <h1 className="font-serif text-4xl">Something didn't load.</h1>
+        <p className="mt-4 text-paper/60 text-sm">{error.message}</p>
+        <button
+          onClick={() => { router.invalidate(); reset(); }}
+          className="mt-8 border border-paper/30 px-8 py-4 text-[11px] uppercase tracking-[0.22em] hover:border-gold hover:text-gold transition-colors"
+        >
+          Try again
+        </button>
       </div>
     </div>
   );
@@ -72,19 +52,40 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Milestone Inventive — Creative production for cultural moments" },
+      { name: "description", content: "Galway-based creative production company delivering festivals, public programmes, conferences and cultural experiences across Ireland." },
+      { name: "author", content: "Milestone Inventive" },
+      { property: "og:title", content: "Milestone Inventive — Creative production for cultural moments" },
+      { property: "og:description", content: "We design, manage and deliver festivals, public programmes and cultural experiences across Ireland." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { property: "og:site_name", content: "Milestone Inventive" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Milestone Inventive",
+          url: "/",
+          description: "Creative production for cultural moments — festivals, public programmes and cultural experiences in Ireland.",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "11 Henry Street",
+            addressLocality: "Galway",
+            addressCountry: "IE",
+          },
+        }),
       },
     ],
   }),
@@ -100,7 +101,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="bg-charcoal text-paper">
         {children}
         <Scripts />
       </body>
@@ -110,10 +111,14 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <RevealOnScroll />
+      <SiteHeader />
+      <main id="main">
+        <Outlet />
+      </main>
+      <SiteFooter />
     </QueryClientProvider>
   );
 }
